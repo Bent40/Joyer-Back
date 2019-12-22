@@ -1,0 +1,14 @@
+CREATE DATABASE app;
+
+USE app;
+
+CREATE TABLE users
+(
+user_name VARCHAR(100) PRIMARY KEY,
+user_password VARCHAR(100) NOT NULL
+);
+
+INSERT INTO users (user_name, user_password)
+VALUES('idan','127364'), ('nadav','364874'),
+	  ('omer', '112374'), ('omri','653132')
+      
