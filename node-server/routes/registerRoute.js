@@ -4,10 +4,12 @@ const router = express.Router();
 
 router.get('/register', async (req, res) => {
     try {
-        const foundUser = await db.insertUser({body:req.body});
-        res.json(foundUser);
+        const insertedUser = await db.insertUser({body:req.body});
+        console.log(insertedUser);
+        res.json(insertedUser);
     }
     catch (err) {
+        console.log(err);
         res.json(err);
     }
 })

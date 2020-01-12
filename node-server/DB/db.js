@@ -51,4 +51,4 @@ const sendCredentialsFound = async (req, res) => {
     terminateConnection();
 };
 
-module.exports = { sendCredentialsFound };
+module.exports = { sendCredentialsFound, insertUser };

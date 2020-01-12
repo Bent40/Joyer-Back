@@ -5,9 +5,11 @@ const router = express.Router();
 router.get('/login', async (req, res) => {
     try {
         const foundUser = await db.sendCredentialsFound({body:req.body});
-        res.json(foundUser);
+        console.log(foundUser);
+        res.send(foundUser);
     }
     catch (err) {
-        res.json(err);
+        console.log(err);
+        res.send(err);
     }
 })
