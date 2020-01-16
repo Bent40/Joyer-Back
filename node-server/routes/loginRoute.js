@@ -4,7 +4,6 @@ const router = express.Router();
 
 router.get('/login', async (req, res) => {
     console.log("i am in /login");
-    
     try {
         const foundUser = await db.sendCredentialsFound({body:req.body})
         res.send(foundUser);

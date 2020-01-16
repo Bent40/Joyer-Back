@@ -4,17 +4,17 @@ var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'Users'
+    database: 'User'
 });
 
 
 
-var startConnection = () => {
+const startConnection = () => {
     connection.connect();
 
 };
 
-var terminateConnection = () => {
+const terminateConnection = () => {
     connection.end();
 
 };
@@ -22,34 +22,29 @@ var terminateConnection = () => {
 
 const insertUser = async (req, res) => {
     startConnection();
-    await connect.query("insert into user (username, password, fName, lname, DOB, Email) Values (?,?,?,?,?,?)",
-        [req.body.username, req.body.password, req.body.fName, req.body.lName, req.body.dob, req.body.email],
-        (err, res, fields) => {
-            if(res)
-            {
-            console.log(res);
-            res.send({ createdUser: res });
-            }
-            else
-            {
-                console.log(err);
-                res.send({err: err});
-            }
-        })
+    try {
+        const insertedRes = await connection.query("insert into user (username, password, fName, lname, DOB, Email) Values (?,?,?,?,?,?)",
+            [req.body.username, req.body.password, req.body.fName, req.body.lName, req.body.dob, req.body.email]);
+        terminateConnection();
+        return insertedRes;
+    }
+    catch (err) {
+        terminateConnection();
+        return err;
+    }
 }
 
 const sendCredentialsFound = async (req, res) => {
 
     startConnection();
-    try{
-    const foundUser = await connection.query("SELECT * FROM user WHERE username = ? AND password = ?",
-        [req.body.username, req.body.password]);
+    try {
+        const foundUser = await connection.query("SELECT * FROM user WHERE username = ? AND password = ?",
+            [req.body.username, req.body.password]);
         terminateConnection();
         console.log(foundUser);
         return foundUser;
     }
-    catch(err)
-    {
+    catch (err) {
         terminateConnection();
         return err;
     }
