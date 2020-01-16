@@ -6,10 +6,12 @@ router.get('/register', async (req, res) => {
     try {
         const insertedUser = await db.insertUser({body:req.body});
         console.log(insertedUser);
-        res.json(insertedUser);
+        res.send(insertedUser);
     }
     catch (err) {
         console.log(err);
-        res.json(err);
+        res.send(err);
     }
 })
+
+module.exports = router

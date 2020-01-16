@@ -4,7 +4,7 @@ var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'root',
-    database: 'app'
+    database: 'Users'
 });
 
 
@@ -20,35 +20,39 @@ var terminateConnection = () => {
 };
 
 
-const insertUser = async (req,res) =>{
-startConnection();
-await connect.query("insert into users (username, password, fName, lname, DOB, Email) Values (?,?,?,?)",
-[req.body.username,req.body.password,req.body.fName, req.body.lName, req.body.dob, req.body.email],
-(err,res,fields)=>{
-    console.log(res);
-})
+const insertUser = async (req, res) => {
+    startConnection();
+    await connect.query("insert into user (username, password, fName, lname, DOB, Email) Values (?,?,?,?,?,?)",
+        [req.body.username, req.body.password, req.body.fName, req.body.lName, req.body.dob, req.body.email],
+        (err, res, fields) => {
+            if(res)
+            {
+            console.log(res);
+            res.send({ createdUser: res });
+            }
+            else
+            {
+                console.log(err);
+                res.send({err: err});
+            }
+        })
 }
+
 const sendCredentialsFound = async (req, res) => {
 
     startConnection();
-
-    await connection.query("SELECT * FROM users WHERE user_name = ? AND user_password = ?",
-        [req.body.username, req.body.password],
-        (error, results, fields) => {
-
-            var userFound = false;
-
-            if (error) throw error;
-
-            if (results.length > 0) {
-                userFound = !userFound;
-            }
-
-            res.send({ isExists: userFound });
-
-        });
-
-    terminateConnection();
+    try{
+    const foundUser = await connection.query("SELECT * FROM user WHERE username = ? AND password = ?",
+        [req.body.username, req.body.password]);
+        terminateConnection();
+        console.log(foundUser);
+        return foundUser;
+    }
+    catch(err)
+    {
+        terminateConnection();
+        return err;
+    }
 };
 
 module.exports = { sendCredentialsFound, insertUser };
