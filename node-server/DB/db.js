@@ -38,8 +38,14 @@ const sendCredentialsFound = async (req, res) => {
 
     startConnection();
     try {
-        const foundUser = await connection.query("SELECT * FROM user WHERE username = ? AND password = ?",
-            [req.body.username, req.body.password]);
+        let foundUser;
+        let sql = `SELECT * FROM user WHERE username = '${req.body.username}' AND password = '${req.body.password}'`;
+        console.log(sql);
+        await connection.query(sql, (res,err)=>{
+            console.log(res);
+            if(err) throw err;
+            foundUser = res;
+        });
         terminateConnection();
         console.log(foundUser);
         return foundUser;
